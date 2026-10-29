@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1g1mhco" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.11.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:collaboration id="Collaboration_1x9kvor">
+    <bpmn:participant id="Participant_17qwhvg" name="Sistem Manajemen Dokumen Penelitian Mahasiswa" processRef="ManajemenDokumenProyekAkhir" />
+  </bpmn:collaboration>
+  <bpmn:process id="ManajemenDokumenProyekAkhir" name="Manajemen Dokumen Proyek Akhir" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_0l6ti7t">
+      <bpmn:lane id="Lane_0asr8ls" name="Mahasiswa">
+        <bpmn:flowNodeRef>daftarSeminar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>bimbinganPraSeminar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_117yu0a</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_0wxoxvp</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>submitPraProposal</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>submitLaporanMbkm</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>revisiJudul</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1hysin5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>bimbinganPraSidang</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>daftarSidang</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_10snb3a</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1i8p8fi</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1v9f10q" name="Kaprodi">
+        <bpmn:flowNodeRef>Gateway_15vdlo3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>submitMbkmKaprodi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>reviewKaprodi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>submitKaprodi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_1lt6z8w</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>aturJadwalSeminar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>aturJadwalSidang</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_0p0v6ur" name="Koordinator TA / PA">
+        <bpmn:flowNodeRef>reviewKoordinatorPA</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>submitKoordinatorPA</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1k5tzl4" name="Tim KBK">
+        <bpmn:flowNodeRef>reviewTimKBK</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1auv966" name="Penguji">
+        <bpmn:flowNodeRef>inputHasilSeminar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_1nk4uhu</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>inputHasilSidang</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_0jur2sa</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:endEvent id="Event_1i8p8fi" name="End">
+      <bpmn:incoming>Flow_10tcfc1</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="Gateway_0jur2sa" name="Bagaimana hasil sidang?">
+      <bpmn:incoming>Flow_18ku31j</bpmn:incoming>
+      <bpmn:outgoing>Flow_10tcfc1</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0rkmtzh</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="inputHasilSidang" name="Input Hasil Sidang Oleh Penguji" camunda:assignee="${penguji}">
+      <bpmn:incoming>Flow_05r1srk</bpmn:incoming>
+      <bpmn:outgoing>Flow_18ku31j</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Activity_10snb3a" name="Notifikasi Jadwal Sidang" camunda:class="com.proyekakhir.manajemendokumen.manajemendokumenproyekakhir.task.services.JadwalSidangService">
+      <bpmn:incoming>Flow_0f9zkfx</bpmn:incoming>
+      <bpmn:outgoing>Flow_05r1srk</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="aturJadwalSidang" name="Atur Jadwal Sidang Oleh Kaprodi" camunda:assignee="${kaprodi}">
+      <bpmn:incoming>Flow_1k6spt6</bpmn:incoming>
+      <bpmn:outgoing>Flow_0f9zkfx</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="daftarSidang" name="Daftar Sidang TA / PA" camunda:assignee="${requestor}">
+      <bpmn:incoming>Flow_1tuar7o</bpmn:incoming>
+      <bpmn:incoming>Flow_0rkmtzh</bpmn:incoming>
+      <bpmn:outgoing>Flow_1k6spt6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:callActivity id="bimbinganPraSidang" name="Bimbingan PraSidang TA / PA" calledElement="BimbinganProyekAkhir">
+      <bpmn:extensionElements>
+        <camunda:in businessKey="#{execution.processBusinessKey}" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_12kc3ex</bpmn:incoming>
+      <bpmn:incoming>Flow_14hgo5u</bpmn:incoming>
+      <bpmn:incoming>Flow_1vy3pwt</bpmn:incoming>
+      <bpmn:outgoing>Flow_1tuar7o</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:exclusiveGateway id="Gateway_1nk4uhu" name="Bagaimana hasil seminar?">
+      <bpmn:incoming>Flow_1oya3pt</bpmn:incoming>
+      <bpmn:outgoing>Flow_0sy6t3u</bpmn:outgoing>
+      <bpmn:outgoing>Flow_14hgo5u</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="inputHasilSeminar" name="Input Hasil Seminar Proposal Oleh Penguji" camunda:assignee="${penguji}">
+      <bpmn:incoming>Flow_05lt6nf</bpmn:incoming>
+      <bpmn:outgoing>Flow_1oya3pt</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Activity_1hysin5" name="Notifikasi Jadwal Seminar" camunda:class="com.proyekakhir.manajemendokumen.manajemendokumenproyekakhir.task.services.JadwalSeminarService">
+      <bpmn:incoming>Flow_11o4jw0</bpmn:incoming>
+      <bpmn:outgoing>Flow_05lt6nf</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="aturJadwalSeminar" name="Atur Jadwal Seminar Oleh Kaprodi" camunda:assignee="${kaprodi}">
+      <bpmn:incoming>Flow_0re4a8p</bpmn:incoming>
+      <bpmn:outgoing>Flow_11o4jw0</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_1lt6z8w" name="Apakah Judul Diterima atau Revisi?">
+      <bpmn:incoming>Flow_18whb28</bpmn:incoming>
+      <bpmn:outgoing>Flow_1yl5kgt</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0kv43a8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="submitKaprodi" name="Review dan Approve Oleh Kaprodi" camunda:assignee="${kaprodi}">
+      <bpmn:incoming>Flow_04if12m</bpmn:incoming>
+      <bpmn:outgoing>Flow_18whb28</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="reviewKaprodi" name="Review dan Approve Oleh Kaprodi" camunda:assignee="${kaprodi}">
+      <bpmn:incoming>Flow_05pvp7r</bpmn:incoming>
+      <bpmn:incoming>Flow_198dmln</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ui8tka</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="submitKoordinatorPA" name="Submit Hasil Review TA / PA Oleh Koordinator" camunda:assignee="${koordinatorPA}">
+      <bpmn:incoming>Flow_005cllb</bpmn:incoming>
+      <bpmn:outgoing>Flow_04if12m</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="revisiJudul" name="Mahasiswa Mengajukan Topik TA / PA Yang Baru" camunda:assignee="${requestor}">
+      <bpmn:incoming>Flow_1yl5kgt</bpmn:incoming>
+      <bpmn:incoming>Flow_0hff5zj</bpmn:incoming>
+      <bpmn:outgoing>Flow_198dmln</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="submitMbkmKaprodi" name="Submit Laporan MBKM Oleh Kaprodi" camunda:assignee="${kaprodi}">
+      <bpmn:incoming>Flow_0j2wqxc</bpmn:incoming>
+      <bpmn:outgoing>Flow_1vy3pwt</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="submitLaporanMbkm" name="Submit Laporan MBKM Oleh Mahasiswa" camunda:assignee="${requestor}">
+      <bpmn:incoming>Flow_05add2r</bpmn:incoming>
+      <bpmn:outgoing>Flow_0j2wqxc</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="submitPraProposal" name="Submit Pra Proposal Oleh Mahasiswa" camunda:assignee="${requestor}">
+      <bpmn:incoming>Flow_1i0n916</bpmn:incoming>
+      <bpmn:outgoing>Flow_05pvp7r</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_0wxoxvp" name="Apakah ikut MBKM?" default="Flow_1i0n916">
+      <bpmn:incoming>Flow_0w0o0cf</bpmn:incoming>
+      <bpmn:outgoing>Flow_1i0n916</bpmn:outgoing>
+      <bpmn:outgoing>Flow_05add2r</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:startEvent id="StartEvent_1" name="Mahasiswa Mengajukan Judul TA / PA">
+      <bpmn:outgoing>Flow_0w0o0cf</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="reviewTimKBK" name="Review dan Approve Oleh Tim KBK" camunda:assignee="${kbk}">
+      <bpmn:incoming>Flow_0lsrj60</bpmn:incoming>
+      <bpmn:outgoing>Flow_005cllb</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="timKbk" camunda:elementVariable="kbk">
+        <bpmn:completionCondition xsi:type="bpmn:tFormalExpression">${decision == 'diterima' || decision == 'ditolak'}</bpmn:completionCondition>
+      </bpmn:multiInstanceLoopCharacteristics>
+    </bpmn:userTask>
+    <bpmn:userTask id="reviewKoordinatorPA" name="Submit Oleh Kordinator TA / PA" camunda:assignee="${koordinatorPA}">
+      <bpmn:incoming>Flow_0fx3mxa</bpmn:incoming>
+      <bpmn:outgoing>Flow_0lsrj60</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_15vdlo3">
+      <bpmn:incoming>Flow_0ui8tka</bpmn:incoming>
+      <bpmn:outgoing>Flow_0fx3mxa</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0hff5zj</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_117yu0a" name="Diploma?">
+      <bpmn:incoming>Flow_0kv43a8</bpmn:incoming>
+      <bpmn:outgoing>Flow_02f69ng</bpmn:outgoing>
+      <bpmn:outgoing>Flow_12kc3ex</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:callActivity id="bimbinganPraSeminar" name="Bimbingan PraSeminar Proposal Proyek Akhir" calledElement="BimbinganProposalProyekAkhir">
+      <bpmn:extensionElements>
+        <camunda:in businessKey="#{execution.processBusinessKey}" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_02f69ng</bpmn:incoming>
+      <bpmn:outgoing>Flow_0569qt8</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:userTask id="daftarSeminar" name="Daftar Seminar Proposal" camunda:assignee="${requestor}">
+      <bpmn:incoming>Flow_0569qt8</bpmn:incoming>
+      <bpmn:incoming>Flow_0sy6t3u</bpmn:incoming>
+      <bpmn:outgoing>Flow_0re4a8p</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0569qt8" sourceRef="bimbinganPraSeminar" targetRef="daftarSeminar" />
+    <bpmn:sequenceFlow id="Flow_02f69ng" name="D4" sourceRef="Gateway_117yu0a" targetRef="bimbinganPraSeminar">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${diploma == 'D4'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_10tcfc1" sourceRef="Gateway_0jur2sa" targetRef="Event_1i8p8fi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${hasilSidang == 'lulus'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_18ku31j" sourceRef="inputHasilSidang" targetRef="Gateway_0jur2sa" />
+    <bpmn:sequenceFlow id="Flow_05pvp7r" sourceRef="submitPraProposal" targetRef="reviewKaprodi" />
+    <bpmn:sequenceFlow id="Flow_0lsrj60" sourceRef="reviewKoordinatorPA" targetRef="reviewTimKBK" />
+    <bpmn:sequenceFlow id="Flow_04if12m" sourceRef="submitKoordinatorPA" targetRef="submitKaprodi" />
+    <bpmn:sequenceFlow id="Flow_198dmln" sourceRef="revisiJudul" targetRef="reviewKaprodi" />
+    <bpmn:sequenceFlow id="Flow_005cllb" sourceRef="reviewTimKBK" targetRef="submitKoordinatorPA" />
+    <bpmn:sequenceFlow id="Flow_18whb28" sourceRef="submitKaprodi" targetRef="Gateway_1lt6z8w" />
+    <bpmn:sequenceFlow id="Flow_1yl5kgt" name="Ditolak" sourceRef="Gateway_1lt6z8w" targetRef="revisiJudul">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${decision=='ditolak'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0kv43a8" name="Diterima" sourceRef="Gateway_1lt6z8w" targetRef="Gateway_117yu0a">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${decision=='diterima'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_12kc3ex" name="D3" sourceRef="Gateway_117yu0a" targetRef="bimbinganPraSidang">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${diploma == 'D3'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0re4a8p" sourceRef="daftarSeminar" targetRef="aturJadwalSeminar" />
+    <bpmn:sequenceFlow id="Flow_11o4jw0" sourceRef="aturJadwalSeminar" targetRef="Activity_1hysin5" />
+    <bpmn:sequenceFlow id="Flow_05lt6nf" sourceRef="Activity_1hysin5" targetRef="inputHasilSeminar" />
+    <bpmn:sequenceFlow id="Flow_1oya3pt" sourceRef="inputHasilSeminar" targetRef="Gateway_1nk4uhu" />
+    <bpmn:sequenceFlow id="Flow_0sy6t3u" name="Tidak Lulus" sourceRef="Gateway_1nk4uhu" targetRef="daftarSeminar">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${hasilSeminar == 'tidak_lulus'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_14hgo5u" name="Lulus" sourceRef="Gateway_1nk4uhu" targetRef="bimbinganPraSidang">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${hasilSeminar == 'lulus'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1tuar7o" sourceRef="bimbinganPraSidang" targetRef="daftarSidang" />
+    <bpmn:sequenceFlow id="Flow_1k6spt6" sourceRef="daftarSidang" targetRef="aturJadwalSidang" />
+    <bpmn:sequenceFlow id="Flow_0f9zkfx" sourceRef="aturJadwalSidang" targetRef="Activity_10snb3a" />
+    <bpmn:sequenceFlow id="Flow_05r1srk" sourceRef="Activity_10snb3a" targetRef="inputHasilSidang" />
+    <bpmn:sequenceFlow id="Flow_0rkmtzh" name="Tidak Lulus" sourceRef="Gateway_0jur2sa" targetRef="daftarSidang">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${hasilSidang == 'tidak_lulus'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0ui8tka" sourceRef="reviewKaprodi" targetRef="Gateway_15vdlo3" />
+    <bpmn:sequenceFlow id="Flow_0fx3mxa" name="Diterima" sourceRef="Gateway_15vdlo3" targetRef="reviewKoordinatorPA">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${decision=='diterima'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0hff5zj" name="Ditolak" sourceRef="Gateway_15vdlo3" targetRef="revisiJudul">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${decision=='ditolak'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0w0o0cf" sourceRef="StartEvent_1" targetRef="Gateway_0wxoxvp" />
+    <bpmn:sequenceFlow id="Flow_1i0n916" name="Tidak" sourceRef="Gateway_0wxoxvp" targetRef="submitPraProposal" />
+    <bpmn:sequenceFlow id="Flow_05add2r" name="Ya" sourceRef="Gateway_0wxoxvp" targetRef="submitLaporanMbkm">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isMbkm}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0j2wqxc" sourceRef="submitLaporanMbkm" targetRef="submitMbkmKaprodi" />
+    <bpmn:sequenceFlow id="Flow_1vy3pwt" sourceRef="submitMbkmKaprodi" targetRef="bimbinganPraSidang" />
+    <bpmn:textAnnotation id="TextAnnotation_07q50dy">
+      <bpmn:text>Tim KBK melakukan submit:
+Diterima / Revisi</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_07bipsj" sourceRef="reviewTimKBK" targetRef="TextAnnotation_07q50dy" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1x9kvor">
+      <bpmndi:BPMNShape id="Participant_17qwhvg_di" bpmnElement="Participant_17qwhvg" isHorizontal="true">
+        <dc:Bounds x="160" y="40" width="2500" height="1320" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1auv966_di" bpmnElement="Lane_1auv966" isHorizontal="true">
+        <dc:Bounds x="190" y="1110" width="2470" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1k5tzl4_di" bpmnElement="Lane_1k5tzl4" isHorizontal="true">
+        <dc:Bounds x="190" y="830" width="2470" height="280" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0p0v6ur_di" bpmnElement="Lane_0p0v6ur" isHorizontal="true">
+        <dc:Bounds x="190" y="590" width="2470" height="240" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1v9f10q_di" bpmnElement="Lane_1v9f10q" isHorizontal="true">
+        <dc:Bounds x="190" y="352" width="2470" height="238" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0asr8ls_di" bpmnElement="Lane_0asr8ls" isHorizontal="true">
+        <dc:Bounds x="190" y="40" width="2470" height="312" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1vy3pwt_di" bpmnElement="Flow_1vy3pwt">
+        <di:waypoint x="410" y="480" />
+        <di:waypoint x="410" y="1320" />
+        <di:waypoint x="1980" y="1320" />
+        <di:waypoint x="1970" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0j2wqxc_di" bpmnElement="Flow_0j2wqxc">
+        <di:waypoint x="410" y="310" />
+        <di:waypoint x="410" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05add2r_di" bpmnElement="Flow_05add2r">
+        <di:waypoint x="410" y="185" />
+        <di:waypoint x="410" y="230" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="419" y="198" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1i0n916_di" bpmnElement="Flow_1i0n916">
+        <di:waypoint x="435" y="160" />
+        <di:waypoint x="510" y="160" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="446" y="142" width="27" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0w0o0cf_di" bpmnElement="Flow_0w0o0cf">
+        <di:waypoint x="308" y="160" />
+        <di:waypoint x="385" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0hff5zj_di" bpmnElement="Flow_0hff5zj">
+        <di:waypoint x="585" y="540" />
+        <di:waypoint x="770" y="540" />
+        <di:waypoint x="770" y="200" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="660" y="522" width="35" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fx3mxa_di" bpmnElement="Flow_0fx3mxa">
+        <di:waypoint x="560" y="565" />
+        <di:waypoint x="560" y="670" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="579" y="566" width="42" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ui8tka_di" bpmnElement="Flow_0ui8tka">
+        <di:waypoint x="560" y="480" />
+        <di:waypoint x="560" y="515" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rkmtzh_di" bpmnElement="Flow_0rkmtzh">
+        <di:waypoint x="2490" y="1195" />
+        <di:waypoint x="2490" y="150" />
+        <di:waypoint x="2130" y="150" />
+        <di:waypoint x="2130" y="190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2421" y="1124" width="57" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05r1srk_di" bpmnElement="Flow_05r1srk">
+        <di:waypoint x="2340" y="230" />
+        <di:waypoint x="2360" y="230" />
+        <di:waypoint x="2360" y="1180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0f9zkfx_di" bpmnElement="Flow_0f9zkfx">
+        <di:waypoint x="2180" y="460" />
+        <di:waypoint x="2290" y="460" />
+        <di:waypoint x="2290" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1k6spt6_di" bpmnElement="Flow_1k6spt6">
+        <di:waypoint x="2130" y="270" />
+        <di:waypoint x="2130" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tuar7o_di" bpmnElement="Flow_1tuar7o">
+        <di:waypoint x="1990" y="230" />
+        <di:waypoint x="2080" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14hgo5u_di" bpmnElement="Flow_14hgo5u">
+        <di:waypoint x="1855" y="1230" />
+        <di:waypoint x="1940" y="1230" />
+        <di:waypoint x="1940" y="270" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1884" y="1212" width="27" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0sy6t3u_di" bpmnElement="Flow_0sy6t3u">
+        <di:waypoint x="1830" y="1205" />
+        <di:waypoint x="1830" y="140" />
+        <di:waypoint x="1450" y="140" />
+        <di:waypoint x="1450" y="190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1761" y="1153" width="57" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1oya3pt_di" bpmnElement="Flow_1oya3pt">
+        <di:waypoint x="1760" y="1230" />
+        <di:waypoint x="1805" y="1230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05lt6nf_di" bpmnElement="Flow_05lt6nf">
+        <di:waypoint x="1660" y="230" />
+        <di:waypoint x="1710" y="230" />
+        <di:waypoint x="1710" y="1190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11o4jw0_di" bpmnElement="Flow_11o4jw0">
+        <di:waypoint x="1500" y="440" />
+        <di:waypoint x="1610" y="440" />
+        <di:waypoint x="1610" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0re4a8p_di" bpmnElement="Flow_0re4a8p">
+        <di:waypoint x="1450" y="270" />
+        <di:waypoint x="1450" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12kc3ex_di" bpmnElement="Flow_12kc3ex">
+        <di:waypoint x="1120" y="205" />
+        <di:waypoint x="1120" y="120" />
+        <di:waypoint x="1940" y="120" />
+        <di:waypoint x="1940" y="190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1127" y="136" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kv43a8_di" bpmnElement="Flow_0kv43a8">
+        <di:waypoint x="1025" y="440" />
+        <di:waypoint x="1120" y="440" />
+        <di:waypoint x="1120" y="255" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1037" y="422" width="42" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1yl5kgt_di" bpmnElement="Flow_1yl5kgt">
+        <di:waypoint x="1000" y="415" />
+        <di:waypoint x="1000" y="160" />
+        <di:waypoint x="820" y="160" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1012" y="306" width="35" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18whb28_di" bpmnElement="Flow_18whb28">
+        <di:waypoint x="920" y="440" />
+        <di:waypoint x="975" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_005cllb_di" bpmnElement="Flow_005cllb">
+        <di:waypoint x="610" y="970" />
+        <di:waypoint x="870" y="970" />
+        <di:waypoint x="870" y="750" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_198dmln_di" bpmnElement="Flow_198dmln">
+        <di:waypoint x="720" y="160" />
+        <di:waypoint x="670" y="160" />
+        <di:waypoint x="670" y="440" />
+        <di:waypoint x="610" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_04if12m_di" bpmnElement="Flow_04if12m">
+        <di:waypoint x="870" y="670" />
+        <di:waypoint x="870" y="480" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0lsrj60_di" bpmnElement="Flow_0lsrj60">
+        <di:waypoint x="560" y="750" />
+        <di:waypoint x="560" y="930" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05pvp7r_di" bpmnElement="Flow_05pvp7r">
+        <di:waypoint x="560" y="200" />
+        <di:waypoint x="560" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18ku31j_di" bpmnElement="Flow_18ku31j">
+        <di:waypoint x="2410" y="1220" />
+        <di:waypoint x="2465" y="1220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10tcfc1_di" bpmnElement="Flow_10tcfc1">
+        <di:waypoint x="2515" y="1220" />
+        <di:waypoint x="2580" y="1220" />
+        <di:waypoint x="2580" y="228" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02f69ng_di" bpmnElement="Flow_02f69ng">
+        <di:waypoint x="1145" y="230" />
+        <di:waypoint x="1210" y="230" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1170" y="212" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0569qt8_di" bpmnElement="Flow_0569qt8">
+        <di:waypoint x="1310" y="230" />
+        <di:waypoint x="1400" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_0p2kis2_di" bpmnElement="daftarSeminar">
+        <dc:Bounds x="1400" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1vod4ym_di" bpmnElement="bimbinganPraSeminar">
+        <dc:Bounds x="1210" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_117yu0a_di" bpmnElement="Gateway_117yu0a" isMarkerVisible="true">
+        <dc:Bounds x="1095" y="205" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1038" y="223" width="47" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_15vdlo3_di" bpmnElement="Gateway_15vdlo3" isMarkerVisible="true">
+        <dc:Bounds x="535" y="515" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1v4aegi_di" bpmnElement="reviewKoordinatorPA">
+        <dc:Bounds x="510" y="670" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1wt6pf0_di" bpmnElement="reviewTimKBK">
+        <dc:Bounds x="510" y="930" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="272" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="245" y="185" width="90" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0wxoxvp_di" bpmnElement="Gateway_0wxoxvp" isMarkerVisible="true">
+        <dc:Bounds x="385" y="135" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="381" y="98" width="58" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1as4sto_di" bpmnElement="submitPraProposal">
+        <dc:Bounds x="510" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0nzx42t_di" bpmnElement="submitLaporanMbkm">
+        <dc:Bounds x="360" y="230" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0enl944_di" bpmnElement="submitMbkmKaprodi">
+        <dc:Bounds x="360" y="400" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_10gy2vr_di" bpmnElement="revisiJudul">
+        <dc:Bounds x="720" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_17cyjva_di" bpmnElement="submitKoordinatorPA">
+        <dc:Bounds x="820" y="670" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1d87rrh_di" bpmnElement="reviewKaprodi">
+        <dc:Bounds x="510" y="400" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0lv1uj5_di" bpmnElement="submitKaprodi">
+        <dc:Bounds x="820" y="400" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1lt6z8w_di" bpmnElement="Gateway_1lt6z8w" isMarkerVisible="true">
+        <dc:Bounds x="975" y="415" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="967" y="475" width="66" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1lhq13i_di" bpmnElement="aturJadwalSeminar">
+        <dc:Bounds x="1400" y="400" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_09lg1rz_di" bpmnElement="Activity_1hysin5">
+        <dc:Bounds x="1560" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_13sm8i7_di" bpmnElement="inputHasilSeminar">
+        <dc:Bounds x="1660" y="1190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1nk4uhu_di" bpmnElement="Gateway_1nk4uhu" isMarkerVisible="true">
+        <dc:Bounds x="1805" y="1205" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1789" y="1262" width="82" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1v4nh67_di" bpmnElement="bimbinganPraSidang">
+        <dc:Bounds x="1890" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_13n26eu_di" bpmnElement="daftarSidang">
+        <dc:Bounds x="2080" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_16pz1md_di" bpmnElement="aturJadwalSidang">
+        <dc:Bounds x="2080" y="420" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1i5wpxc_di" bpmnElement="Activity_10snb3a">
+        <dc:Bounds x="2240" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_04garu2_di" bpmnElement="inputHasilSidang">
+        <dc:Bounds x="2310" y="1180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_07q50dy_di" bpmnElement="TextAnnotation_07q50dy">
+        <dc:Bounds x="580" y="850" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0jur2sa_di" bpmnElement="Gateway_0jur2sa" isMarkerVisible="true">
+        <dc:Bounds x="2465" y="1195" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2449" y="1252" width="82" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1i8p8fi_di" bpmnElement="Event_1i8p8fi">
+        <dc:Bounds x="2562" y="192" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2571" y="162" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_07bipsj_di" bpmnElement="Association_07bipsj">
+        <di:waypoint x="585" y="930" />
+        <di:waypoint x="597" y="910" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

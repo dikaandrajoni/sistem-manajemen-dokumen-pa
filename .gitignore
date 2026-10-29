@@ -1,0 +1,17 @@
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Build
+manajemen-dokumen/target/
+manajemen-pa-fe/build/
+node_modules/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+*.exe
+*.log

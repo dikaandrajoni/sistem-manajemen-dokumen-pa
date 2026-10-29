@@ -1,0 +1,7 @@
+.custom-modal-style {
+    width: 800px;
+    height: 100%;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+}

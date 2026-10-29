@@ -1,0 +1,7 @@
+.custom-preview {
+    width: 800px;
+    height: fit-content;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+}

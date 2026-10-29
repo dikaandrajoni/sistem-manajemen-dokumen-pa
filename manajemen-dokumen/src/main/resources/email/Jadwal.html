@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- use the font -->
+    <style>
+        body {
+            font-family: 'Arial',sans-serif;
+            font-size: 14px;
+            padding-left: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 50%;
+        }
+        table, th, td {
+            border: 0px solid black;
+        }
+        th, td {
+            font-weight: normal;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<p th:text="'Hai, '+${nama}">Hai, Dika andra joni</p>
+<p th:text="'Berikut Jadwal '+${header}">Berikut jadwal seminar proposal</p>
+<br/>
+<br/>
+<table>
+    <tr>
+        <td>No BP</td>
+        <td>:</td>
+        <td th:text="${bp}"></td>
+    </tr>
+    <tr>
+        <td>Nama</td>
+        <td>:</td>
+        <td th:text="${nama}"></td>
+    </tr>
+    <tr>
+        <td>Judul Proyek Akhir</td>
+        <td>:</td>
+        <td th:text="${judul}"></td>
+    </tr>
+    <tr>
+        <td>Pembimbing 1</td>
+        <td>:</td>
+        <td th:text="${pembimbing1}"></td>
+    </tr>
+    <tr>
+        <td>Pembimbing 2</td>
+        <td>:</td>
+        <td th:text="${pembimbing2}"></td>
+    </tr>
+    <tr>
+        <td>Penguji</td>
+        <td>:</td>
+        <td th:text="${penguji}"></td>
+    </tr>
+<!--    <tr>-->
+<!--        <td>Tempat</td>-->
+<!--        <td>:</td>-->
+<!--        <td th:text="${tempat}"></td>-->
+<!--    </tr>-->
+    <tr>
+        <td>Jadwal</td>
+        <td>:</td>
+        <td th:text="${jadwal}"></td>
+    </tr>
+</table>
+
+<p>Terimakasih</p>
+</body>
+</html>

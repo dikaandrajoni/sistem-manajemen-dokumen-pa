@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0oo5t1n" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.11.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:collaboration id="Collaboration_0f7xsqe">
+    <bpmn:participant id="Participant_0seofjr" name="Bimbingan TA / PA" processRef="BimbinganProyekAkhir" />
+  </bpmn:collaboration>
+  <bpmn:process id="BimbinganProyekAkhir" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Start">
+      <bpmn:outgoing>Flow_0w1ulmq</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0w1ulmq" sourceRef="StartEvent_1" targetRef="submitLaporan" />
+    <bpmn:userTask id="submitLaporan" name="Submit Laporan ">
+      <bpmn:incoming>Flow_0w1ulmq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ky3zdl</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0ky3zdl" sourceRef="submitLaporan" targetRef="reviewPembimbing" />
+    <bpmn:userTask id="reviewPembimbing" name="Review Pembimbing" camunda:assignee="${reviewer}">
+      <bpmn:incoming>Flow_0ky3zdl</bpmn:incoming>
+      <bpmn:incoming>Flow_13n9sen</bpmn:incoming>
+      <bpmn:outgoing>Flow_12gllpt</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="reviewers" camunda:elementVariable="reviewer">
+        <bpmn:completionCondition xsi:type="bpmn:tFormalExpression">${decision == 'ditolak'}</bpmn:completionCondition>
+      </bpmn:multiInstanceLoopCharacteristics>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_0e2vu1w">
+      <bpmn:incoming>Flow_12gllpt</bpmn:incoming>
+      <bpmn:outgoing>Flow_0bfnuwk</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0dcqokm</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_12gllpt" sourceRef="reviewPembimbing" targetRef="Gateway_0e2vu1w" />
+    <bpmn:endEvent id="Event_1tryius" name="End">
+      <bpmn:incoming>Flow_0bfnuwk</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0bfnuwk" name="Diterima" sourceRef="Gateway_0e2vu1w" targetRef="Event_1tryius">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${decision == 'diterima'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0dcqokm" name="Revisi" sourceRef="Gateway_0e2vu1w" targetRef="revisiLaporan">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${decision == 'ditolak'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="revisiLaporan" name="Revisi Laporan" camunda:assignee="${requestor}">
+      <bpmn:incoming>Flow_0dcqokm</bpmn:incoming>
+      <bpmn:outgoing>Flow_13n9sen</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_13n9sen" sourceRef="revisiLaporan" targetRef="reviewPembimbing" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0f7xsqe">
+      <bpmndi:BPMNShape id="Participant_0seofjr_di" bpmnElement="Participant_0seofjr" isHorizontal="true">
+        <dc:Bounds x="120" y="90" width="750" height="340" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_13n9sen_di" bpmnElement="Flow_13n9sen">
+        <di:waypoint x="580" y="150" />
+        <di:waypoint x="490" y="150" />
+        <di:waypoint x="490" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dcqokm_di" bpmnElement="Flow_0dcqokm">
+        <di:waypoint x="630" y="275" />
+        <di:waypoint x="630" y="190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="655" y="230" width="30" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bfnuwk_di" bpmnElement="Flow_0bfnuwk">
+        <di:waypoint x="655" y="300" />
+        <di:waypoint x="722" y="300" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="668" y="282" width="42" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12gllpt_di" bpmnElement="Flow_12gllpt">
+        <di:waypoint x="540" y="300" />
+        <di:waypoint x="605" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ky3zdl_di" bpmnElement="Flow_0ky3zdl">
+        <di:waypoint x="380" y="300" />
+        <di:waypoint x="440" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0w1ulmq_di" bpmnElement="Flow_0w1ulmq">
+        <di:waypoint x="228" y="300" />
+        <di:waypoint x="280" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="192" y="282" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="198" y="325" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_05h3liv_di" bpmnElement="submitLaporan">
+        <dc:Bounds x="280" y="260" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0yf30wh_di" bpmnElement="reviewPembimbing">
+        <dc:Bounds x="440" y="260" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0e2vu1w_di" bpmnElement="Gateway_0e2vu1w" isMarkerVisible="true">
+        <dc:Bounds x="605" y="275" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1tryius_di" bpmnElement="Event_1tryius">
+        <dc:Bounds x="722" y="282" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="730" y="325" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_090utbo_di" bpmnElement="revisiLaporan">
+        <dc:Bounds x="580" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
